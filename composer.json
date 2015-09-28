@@ -1,0 +1,19 @@
+{
+    "name": "xemlock/array_column",
+    "description": "array_column() implementation for PHP versions earlier than 5.5",
+    "type": "library",
+    "homepage": "https://github.com/xemlock/array_column",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xemlock",
+            "email": "xemlock@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "files": ["src/array_column.php"]
+    }
+}
