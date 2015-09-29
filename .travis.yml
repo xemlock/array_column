@@ -9,7 +9,9 @@ php:
     - 7.0
     - hhvm
 
-script: phpunit --coverage-text
+script:
+    - mkdir -p build/logs
+    - phpunit
 
 matrix:
     allow_failures:
