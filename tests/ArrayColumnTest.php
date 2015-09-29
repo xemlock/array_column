@@ -1,5 +1,5 @@
 <?php
-class ArrayColumnTest extends \PHPUnit_Framework_TestCase
+class ArrayColumnTest extends PHPUnit_Framework_TestCase
 {
     protected $recordSet;
     protected $multiDataTypes;
@@ -385,6 +385,64 @@ class ArrayColumnTest extends \PHPUnit_Framework_TestCase
             2135 => 'John',
             3245 => 'Sally',
         );
+
+        $this->assertEquals($expected, array_column($records, $columnKey, $indexKey));
+    }
+
+    /**
+     * @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedExceptionMessage array_column() expects at most 3 parameters, 4 given
+     */
+    public function testFunctionWithFourArgs()
+    {
+        array_column(null, null, null, null);
+    }
+
+    public function testFunctionWithFourArgsReturnValue()
+    {
+        $columnKey = 'value';
+        $indexKey = 'id';
+        $records = array(
+            array(
+                'id' => 12.4,
+                'value' => 1,
+            ),
+            array(
+                'id' => 12,
+                'value' => 2,
+            ),
+        );
+
+        $result = @array_column($records, $columnKey, $indexKey, null);
+        $this->assertNull($result);
+    }
+
+    public function testFunctionWithIndexKeyAsFloat()
+    {
+        $columnKey = 'value';
+        $indexKey = 'id';
+        $records = array(
+            array(
+                'id' => 12.4,
+                'value' => 1,
+            ),
+            array(
+                'id' => 12,
+                'value' => 2,
+            ),
+        );
+
+        $expected = array(
+            0 => 1,
+            12 => 2,
+        );
+
+        // tested on hhvm-3.6.1 - 3.9.0
+        if (defined('HHVM_VERSION')) {
+            $expected = array(
+                12 => 2,
+            );
+        }
 
         $this->assertEquals($expected, array_column($records, $columnKey, $indexKey));
     }
