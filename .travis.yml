@@ -10,8 +10,9 @@ php:
     - hhvm
 
 before_script:
-    - travis_retry composer self-update
-    - travis_retry composer install --no-interaction --prefer-source
+    # Composer is not available on PHP 5.2
+    - if [ ${TRAVIS_PHP_VERSION:0:3} != "5.2" ]; then travis_retry composer self-update; fi
+    - if [ ${TRAVIS_PHP_VERSION:0:3} != "5.2" ]; then travis_retry composer install --no-interaction --prefer-source; fi
 
 script:
     - mkdir -p build/logs
