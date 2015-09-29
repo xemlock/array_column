@@ -417,6 +417,34 @@ class ArrayColumnTest extends PHPUnit_Framework_TestCase
         $this->assertNull($result);
     }
 
+    public function testFunctionWithColumnKeyAsFloat()
+    {
+        // float column key should be coerced to integer
+        $columnKey = 12.4;
+        $records = array(
+            array(
+                // 12 should match the column key coerced to integer
+                12 => 1,
+            ),
+            array(
+                // 12.4 will automatically be coerced to 12 by PHP internals,
+                // as such it should match the column key coerced to integer
+                12.4 => 2,
+            ),
+            array(
+                // this item should be ignored because column key value '12.4'
+                // is a string, not an integer (or float)
+                '12.4' => 3,
+            ),
+        );
+        $expected = array(
+            0 => 1,
+            1 => 2,
+        );
+
+        $this->assertEquals($expected, array_column($records, $columnKey));
+    }
+
     public function testFunctionWithIndexKeyAsFloat()
     {
         $columnKey = 'value';
