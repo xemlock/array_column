@@ -1,16 +1,17 @@
 language: php
 
-php:
-    - 5.2
-    - 5.3
-    - 5.4
-    - 5.5
-    - 5.6
-    - 7.0
-    - hhvm
-
-env:
-    - COVERAGE=false
+matrix:
+  # Generate coverage report only for PHP 5.3 and 5.4
+  include:
+    - php: 5.2
+    - php: 5.3
+      env: COVERAGE=true
+    - php: 5.4
+      env: COVERAGE=true
+    - php: 5.5
+    - php: 5.6
+    - php: 7
+    - php: hhvm
 
 before_script:
     # Composer is not available on PHP 5.2
@@ -25,10 +26,3 @@ script:
 after_script:
     - if [ "${COVERAGE}" = "true" ]; then php vendor/bin/coveralls; fi
 
-matrix:
-  # Generate coverage report only for PHP 5.3 and 5.4
-  include:
-    - php: 5.3
-      env: COVERAGE=true
-    - php: 5.4
-      env: COVERAGE=true
