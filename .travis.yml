@@ -9,6 +9,9 @@ php:
     - 7.0
     - hhvm
 
+env:
+    - COVERAGE=false
+
 before_script:
     # Composer is not available on PHP 5.2
     - if [ ${TRAVIS_PHP_VERSION:0:3} != "5.2" ]; then travis_retry composer self-update; fi
@@ -16,11 +19,16 @@ before_script:
 
 script:
     - mkdir -p build/logs
-    - phpunit
+    - if [ "${COVERAGE}" = "true" ]; then phpunit --coverage-clover build/logs/clover.xml; fi
+    - if [ "${COVERAGE}" != "true" ]; then phpunit; fi
 
 after_script:
-    - php vendor/bin/coveralls
+    - if [ "${COVERAGE}" = "true" ]; then php vendor/bin/coveralls; fi
 
 matrix:
-    allow_failures:
-        - php: hhvm
+  # Generate coverage report only for PHP 5.3 and 5.4
+  include:
+    - php: 5.3
+      env: COVERAGE=true
+    - php: 5.4
+      env: COVERAGE=true
